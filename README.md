@@ -4,6 +4,8 @@ Curso prático para desenvolver movimentos de dogfight em jatos do **Battlefield
 
 O objetivo não é decorar truques isolados nem manter `313` em círculos perfeitos. É aprender a **preservar ou recuperar a faixa de velocidade enquanto o plano da luta muda**.
 
+![Roadmap visual do curso](assets/roadmap.jpg)
+
 ## Como usar
 
 1. Leia o [método de treinamento](docs/00-metodo-de-treinamento.md).
