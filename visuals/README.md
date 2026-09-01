@@ -19,6 +19,10 @@ manobra.
 A câmera não é configurável por cena — ela é fixada pelo tipo de saída
 (storyboard → panorâmica + tática, GIF → chase).
 
+O caça é um modelo glTF de terceiros (`assets/models/fighter.glb`) sob licença
+**CC-BY 3.0** — a atribuição em `assets/models/CREDITS.md` precisa acompanhar
+qualquer redistribuição dos artefatos.
+
 ## Instalação
 
 ```
@@ -99,13 +103,17 @@ GIF gerados.
 ## Estrutura
 
 ```
+assets/
+  models/
+    fighter.glb               modelo glTF do caça ("Jet" de jeremy, CC-BY 3.0)
+    CREDITS.md                atribuição do(s) modelo(s)
 scenes/
   NN-*.js                     dados da manobra (keyframes)
   scenes.test.js              valida TODA cena em scenes/
   shared/
     interpolate.js            interpolação linear entre keyframes
-    jet.js                    modelo estilizado do jato (nariz = +Z local)
-    cameraRigs.js             câmeras tática e chase
+    jet.js                    URL + normalização do modelo (nariz = +Z local)
+    cameraRigs.js             câmeras panorâmica, tática e chase
     assertValidScene.js       invariantes estruturais de uma cena
 render/
   static-server.js            serve visuals/ em 127.0.0.1 durante a captura

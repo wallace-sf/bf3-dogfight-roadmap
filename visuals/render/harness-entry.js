@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { buildJet } from '../scenes/shared/jet.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { normalizeJet, FIGHTER_MODEL_URL } from '../scenes/shared/jet.js';
 import {
   tacticalCameraPosition,
   overviewCameraPosition,
@@ -34,7 +35,16 @@ sun.position.set(60, 120, 40);
 scene.add(sun);
 scene.add(new THREE.HemisphereLight(0xbcd0e0, 0x2b3038, 0.6));
 
-const jet = buildJet();
+// The jet model orients its nose along local +Z; wrap it in a group so the
+// harness rotates the wrapper (matching the old buildJet() contract) without
+// touching the model's own transform, which normalizeJet uses for scale.
+const jet = new THREE.Group();
+const gltf = await new GLTFLoader().loadAsync(FIGHTER_MODEL_URL);
+normalizeJet(gltf.scene);
+gltf.scene.traverse((node) => {
+  if (node.isMesh) node.material = new THREE.MeshStandardMaterial({ color: 0x6b7580, metalness: 0.2, roughness: 0.7 });
+});
+jet.add(gltf.scene);
 scene.add(jet);
 
 // The tactical camera now sits close to the jet per keyframe, so the model
