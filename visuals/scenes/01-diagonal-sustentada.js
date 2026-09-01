@@ -1,0 +1,35 @@
+export default {
+  id: '01-diagonal-sustentada',
+  keyframes: [
+    {
+      t: 0,
+      pos: [0, 100, 0],
+      pitch: 0,
+      roll: 30,
+      speed: 310,
+      tendencia: 'estável',
+      comando: 'manter',
+      nota: 'Entrada no plano diagonal',
+    },
+    {
+      t: 2.5,
+      pos: [40, 90, 20],
+      pitch: -5,
+      roll: 30,
+      speed: 300,
+      tendencia: 'caindo',
+      comando: 'AB curto',
+      nota: 'Meio da curva — corrige leve queda',
+    },
+    {
+      t: 5,
+      pos: [80, 100, 40],
+      pitch: 0,
+      roll: 30,
+      speed: 312,
+      tendencia: 'subindo',
+      comando: 'conter',
+      nota: 'Saída, plano estabilizado',
+    },
+  ],
+};
