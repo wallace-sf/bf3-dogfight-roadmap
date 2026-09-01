@@ -59,13 +59,12 @@ export default {
     { t: 2.5, pos: [40, 90, 20], pitch: -5, roll: 30, speed: 300, tendencia: "caindo",  comando: "AB curto", nota: "Meio da curva — corrige leve queda" },
     { t: 5,   pos: [80, 100, 40], pitch: 0, roll: 30, speed: 312, tendencia: "subindo", comando: "conter",   nota: "Saída, plano estabilizado" },
   ],
-  camera: "chase", // ou "tatica"
 };
 ```
 
 - `pos/pitch/roll` alimentam a trajetória interpolada do jato estilizado.
 - `speed/tendencia/comando/nota` usam exatamente os campos do modelo mental do README (velocidade atual → tendência → orientação → próximo comando) e viram as legendas do storyboard — texto fora do canvas 3D, não renderizado dentro da cena, para ficar fácil de editar e revisar.
-- Cada cena escolhe uma câmera: **chase** (atrás do jato, simula visão de jogo — usada para o GIF) ou **tática** (visão externa fixa mostrando o plano completo — usada para o storyboard, por deixar a geometria mais clara).
+- A câmera **não** é um campo da cena: ela é fixada pelo tipo de saída — storyboard sempre usa a câmera **tática** (visão externa mostrando o plano completo, por deixar a geometria mais clara) e o GIF sempre usa a câmera **chase** (atrás do jato, simula visão de jogo). Escolher por saída, e não por cena, se mostrou mais útil: toda manobra quer as duas visões. Não adicione um campo `camera` aos dados da cena — ele não é lido por nada.
 
 ### Pipeline de captura e exportação
 

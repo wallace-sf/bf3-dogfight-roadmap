@@ -1,24 +1,31 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import scene from './01-diagonal-sustentada.js';
-import { interpolateKeyframes } from './shared/interpolate.js';
 
-test('scene has the expected id and three keyframes in ascending time order', () => {
+// Generic structural invariants live in scenes.test.js, which runs
+// assertValidScene against every scene module. What is left here is specific to
+// this maneuver's authored content.
+
+test('the storyboard has exactly the three beats the module text describes', () => {
   assert.equal(scene.id, '01-diagonal-sustentada');
   assert.equal(scene.keyframes.length, 3);
-  const times = scene.keyframes.map((k) => k.t);
-  assert.deepEqual(times, [...times].sort((a, b) => a - b));
+  assert.deepEqual(
+    scene.keyframes.map((k) => k.tendencia),
+    ['estável', 'caindo', 'subindo']
+  );
 });
 
-test('every keyframe has the full field set required by the storyboard caption', () => {
-  for (const keyframe of scene.keyframes) {
-    for (const field of ['t', 'pos', 'pitch', 'roll', 'speed', 'tendencia', 'comando', 'nota']) {
-      assert.ok(field in keyframe, `missing field "${field}"`);
-    }
-  }
+test('the trajectory is a sustained diagonal: monotonic in x and z, dipping in y', () => {
+  const [start, middle, end] = scene.keyframes;
+
+  assert.ok(start.pos[0] < middle.pos[0] && middle.pos[0] < end.pos[0], 'x advances');
+  assert.ok(start.pos[2] < middle.pos[2] && middle.pos[2] < end.pos[2], 'z advances');
+  assert.ok(middle.pos[1] < start.pos[1], 'altitude dips through the middle');
+  assert.equal(end.pos[1], start.pos[1], 'exits at the entry altitude');
 });
 
-test('scene keyframes are usable by interpolateKeyframes', () => {
-  const frame = interpolateKeyframes(scene.keyframes, scene.keyframes[1].t);
-  assert.deepEqual(frame.pos, scene.keyframes[1].pos);
+test('bank is held constant through the maneuver (sustained plane)', () => {
+  const rolls = new Set(scene.keyframes.map((k) => k.roll));
+  assert.equal(rolls.size, 1, 'roll is constant across all keyframes');
+  assert.ok([...rolls][0] !== 0, 'the jet is actually banked');
 });

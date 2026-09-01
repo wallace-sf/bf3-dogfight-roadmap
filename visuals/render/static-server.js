@@ -32,6 +32,8 @@ export function startServer() {
       });
     });
 
-    server.listen(0, () => resolve(server));
+    // Bind to loopback only: this server is a short-lived render-time helper and
+    // must not be reachable from the local network.
+    server.listen(0, '127.0.0.1', () => resolve(server));
   });
 }
