@@ -1,0 +1,14 @@
+{
+  "name": "bf3-dogfight-visuals",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test scenes/shared/*.test.js scenes/*.test.js render/*.test.js"
+  },
+  "dependencies": {
+    "three": "^0.160.0",
+    "puppeteer": "^22.0.0",
+    "ffmpeg-static": "^5.2.0"
+  }
+}
