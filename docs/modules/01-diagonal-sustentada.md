@@ -1,5 +1,17 @@
 # Módulo 1 — Diagonal sustentada
 
+## Visualização
+
+![Plano da manobra](../../assets/maneuvers/01-diagonal-sustentada/storyboard-0.png)
+
+| Início | Meio | Saída |
+|---|---|---|
+| ![Início](../../assets/maneuvers/01-diagonal-sustentada/storyboard-1.png)<br>310, estável, —, manter | ![Meio](../../assets/maneuvers/01-diagonal-sustentada/storyboard-2.png)<br>300, caindo, —, AB curto | ![Saída](../../assets/maneuvers/01-diagonal-sustentada/storyboard-3.png)<br>312, subindo, —, conter |
+
+![Manobra completa](../../assets/maneuvers/01-diagonal-sustentada/loop.gif)
+
+<sub>Modelo do caça: "Jet" de jeremy ([CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/)), via poly.pizza.</sub>
+
 ## Objetivo
 
 Transformar a diagonal em uma curva básica previsível. A meta não é mudar o plano; é escolher uma inclinação, parar o roll e descobrir o ritmo de velocidade desse plano.
