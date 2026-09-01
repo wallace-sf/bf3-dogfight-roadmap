@@ -47,6 +47,11 @@ try {
   const cameraMode = mode === 'storyboard' ? 'tatica' : 'chase';
 
   if (mode === 'storyboard') {
+    // Opening panel: the whole trajectory in one wide shot, for context.
+    const midT = keyframes[Math.floor(keyframes.length / 2)].t;
+    await page.evaluate((time) => window.__applyFrame(time, 'panorama'), midT);
+    await canvas.screenshot({ path: path.join(outDir, 'storyboard-0.png') });
+
     for (let i = 0; i < keyframes.length; i += 1) {
       await page.evaluate(
         (time, camMode) => window.__applyFrame(time, camMode),
@@ -55,7 +60,7 @@ try {
       );
       await canvas.screenshot({ path: path.join(outDir, `storyboard-${i + 1}.png`) });
     }
-    console.log(`Wrote ${keyframes.length} storyboard frames to ${outDir}`);
+    console.log(`Wrote ${keyframes.length + 1} storyboard frames to ${outDir}`);
   } else {
     const fps = 15;
     const duration = keyframes[keyframes.length - 1].t;

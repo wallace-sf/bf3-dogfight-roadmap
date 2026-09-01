@@ -35,7 +35,7 @@ execFileSync(
     '-y',
     '-framerate', '15',
     '-i', path.join(framesDir, 'frame-%04d.png'),
-    '-vf', 'palettegen',
+    '-vf', 'palettegen=max_colors=64:stats_mode=diff',
     palettePath,
   ],
   { stdio: 'inherit' }
@@ -48,7 +48,7 @@ execFileSync(
     '-framerate', '15',
     '-i', path.join(framesDir, 'frame-%04d.png'),
     '-i', palettePath,
-    '-lavfi', 'paletteuse',
+    '-lavfi', 'paletteuse=dither=none',
     outputGif,
   ],
   { stdio: 'inherit' }

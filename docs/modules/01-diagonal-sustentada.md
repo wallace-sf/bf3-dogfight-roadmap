@@ -2,6 +2,8 @@
 
 ## Visualização
 
+![Plano da manobra](../../assets/maneuvers/01-diagonal-sustentada/storyboard-0.png)
+
 | Início | Meio | Saída |
 |---|---|---|
 | ![Início](../../assets/maneuvers/01-diagonal-sustentada/storyboard-1.png)<br>310, estável, —, manter | ![Meio](../../assets/maneuvers/01-diagonal-sustentada/storyboard-2.png)<br>300, caindo, —, AB curto | ![Saída](../../assets/maneuvers/01-diagonal-sustentada/storyboard-3.png)<br>312, subindo, —, conter |

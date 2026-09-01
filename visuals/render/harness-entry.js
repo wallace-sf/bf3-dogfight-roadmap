@@ -1,6 +1,10 @@
 import * as THREE from 'three';
 import { buildJet } from '../scenes/shared/jet.js';
-import { tacticalCameraPosition, chaseCameraPosition } from '../scenes/shared/cameraRigs.js';
+import {
+  tacticalCameraPosition,
+  overviewCameraPosition,
+  chaseCameraPosition,
+} from '../scenes/shared/cameraRigs.js';
 import { interpolateKeyframes } from '../scenes/shared/interpolate.js';
 
 const params = new URLSearchParams(window.location.search);
@@ -16,23 +20,25 @@ const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setSize(800, 600);
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x87ceeb);
-scene.add(new THREE.GridHelper(200, 20));
-scene.add(new THREE.AmbientLight(0x404040));
+scene.background = new THREE.Color(0x5b6b7d);
 
-const sun = new THREE.DirectionalLight(0xffffff, 1);
-sun.position.set(50, 100, 50);
+// Ground grid: large and low-contrast, so it reads as a reference plane without
+// competing with the jet or the trajectory line.
+const grid = new THREE.GridHelper(600, 30, 0x7d8c9c, 0x6b7a88);
+scene.add(grid);
+
+scene.add(new THREE.AmbientLight(0xb0bcc8, 1.4));
+
+const sun = new THREE.DirectionalLight(0xfff4e6, 2.2);
+sun.position.set(60, 120, 40);
 scene.add(sun);
+scene.add(new THREE.HemisphereLight(0xbcd0e0, 0x2b3038, 0.6));
 
 const jet = buildJet();
 scene.add(jet);
 
-// Visual-only scale applied in the tactical (storyboard) view. The trajectory
-// spans ~90 units while the jet model is ~6 units long, so at a framing that
-// contains the whole path the jet renders as a handful of pixels and its
-// pitch/roll geometry — the entire point of the storyboard — is unreadable.
-// This is legibility, not physical accuracy: the chase view keeps scale 1.
-const TACTICAL_JET_SCALE = 3.5;
+// The tactical camera now sits close to the jet per keyframe, so the model
+// renders at a readable size at scale 1 — no artificial storyboard-only scaling.
 
 // Trajectory line: samples the same interpolation the jet follows, so the
 // storyboard shows the diagonal plane being flown, not just an isolated dot.
@@ -62,13 +68,10 @@ const dropLines = new THREE.LineSegments(
 );
 scene.add(dropLines);
 
-const camera = new THREE.PerspectiveCamera(50, 800 / 600, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(50, 800 / 600, 0.1, 2000);
 
-// Invariant across the whole storyboard loop: depends only on the static
-// keyframes, so compute it once rather than on every frame.
-// The jet model's largest half-extent is its 6-unit wingspan (half = 3); pad
-// the framing by that, scaled, so the jet never clips at the frame edge.
-const tacticalRig = tacticalCameraPosition(keyframes, { padding: TACTICAL_JET_SCALE * 3 });
+// The panorama (opening) shot depends only on the static keyframes.
+const overviewRig = overviewCameraPosition(keyframes);
 
 /**
  * Unit direction of travel at time `t`, via a central finite difference on the
@@ -114,8 +117,12 @@ function applyFrame(t, cameraMode) {
   jet.rotateX(-THREE.MathUtils.degToRad(frame.pitch));
   jet.rotateZ(THREE.MathUtils.degToRad(frame.roll));
 
-  const tactical = cameraMode === 'tatica';
-  jet.scale.setScalar(tactical ? TACTICAL_JET_SCALE : 1);
+  const panorama = cameraMode === 'panorama';
+  const tactical = cameraMode === 'tatica' || panorama;
+
+  // The panorama frames the whole path, so scale 1 leaves the jet a dot. Blow
+  // it up purely for that opening shot; every other view keeps true scale.
+  jet.scale.setScalar(panorama ? 3 : 1);
   // Storyboard-only overlays. In the chase view the camera looks straight down
   // the path, so the trajectory line projects onto the jet as a distracting
   // vertical bar rather than reading as a flight path; the drop lines likewise
@@ -123,7 +130,14 @@ function applyFrame(t, cameraMode) {
   trajectory.visible = tactical;
   dropLines.visible = tactical;
 
-  const rig = tactical ? tacticalRig : chaseCameraPosition(frame.pos, forward.toArray());
+  let rig;
+  if (panorama) {
+    rig = overviewRig;
+  } else if (tactical) {
+    rig = tacticalCameraPosition({ pos: frame.pos }, forward.toArray());
+  } else {
+    rig = chaseCameraPosition(frame.pos, forward.toArray());
+  }
 
   camera.position.set(rig.position[0], rig.position[1], rig.position[2]);
   camera.lookAt(rig.lookAt[0], rig.lookAt[1], rig.lookAt[2]);

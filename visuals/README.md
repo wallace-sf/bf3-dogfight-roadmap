@@ -3,8 +3,12 @@
 Pipeline **offline** que transforma a definição de uma manobra (uma lista de
 keyframes em JS) nos artefatos que aparecem no curso:
 
+- `assets/maneuvers/<scene-id>/storyboard-0.png` — painel de abertura em câmera
+  **panorâmica** (a trajetória inteira num quadro, jato ampliado para contexto).
 - `assets/maneuvers/<scene-id>/storyboard-1.png`, `-2.png`, `-3.png` — um PNG por
-  keyframe, em câmera **tática** (visão externa 3/4, mostra o plano da manobra).
+  keyframe, em câmera **tática**: uma visão externa 3/4 travada no jato *naquele
+  instante* (curta distância fixa), de modo que a atitude — pitch/roll — fique
+  legível. A linha de trajetória continua desenhada ao fundo.
 - `assets/maneuvers/<scene-id>/loop.gif` — a manobra completa em câmera **chase**
   (atrás do jato, simula a visão de jogo).
 
@@ -13,7 +17,7 @@ referenciados nos `.md`. Este toolchain só interessa a quem **cria ou edita** u
 manobra.
 
 A câmera não é configurável por cena — ela é fixada pelo tipo de saída
-(storyboard → tática, GIF → chase).
+(storyboard → panorâmica + tática, GIF → chase).
 
 ## Instalação
 
